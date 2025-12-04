@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36414.22 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PcBuilderWebApp", "PcBuilderWebApp\PcBuilderWebApp.csproj", "{68EF39BA-C69E-41A5-93D6-68277EBE04A6}"
+	ProjectSection(ProjectDependencies) = postProject
+		{92D0C98C-ECDE-41D9-A6C3-DF7C2A575957} = {92D0C98C-ECDE-41D9-A6C3-DF7C2A575957}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PCBuilderLibrary", "PCBuilderLibrary\PCBuilderLibrary.csproj", "{92D0C98C-ECDE-41D9-A6C3-DF7C2A575957}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{68EF39BA-C69E-41A5-93D6-68277EBE04A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68EF39BA-C69E-41A5-93D6-68277EBE04A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68EF39BA-C69E-41A5-93D6-68277EBE04A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68EF39BA-C69E-41A5-93D6-68277EBE04A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92D0C98C-ECDE-41D9-A6C3-DF7C2A575957}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92D0C98C-ECDE-41D9-A6C3-DF7C2A575957}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92D0C98C-ECDE-41D9-A6C3-DF7C2A575957}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92D0C98C-ECDE-41D9-A6C3-DF7C2A575957}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A0E75641-BD24-491F-A756-67C40C56521C}
+	EndGlobalSection
+EndGlobal
