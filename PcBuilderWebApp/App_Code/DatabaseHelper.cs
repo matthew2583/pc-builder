@@ -7,9 +7,9 @@ using PCBuilderLibrary.Components;
 namespace PcBuilderWebApp
 {
     // Класс для работы с базой данных через LINQ
-    public class DatabaseHelper
+    public class DatabaseHelper : IDisposable
     {
-        private PCBuilderDataContext context;
+        private readonly PCBuilderDataContext context;
 
         public DatabaseHelper()
         {
@@ -52,9 +52,14 @@ namespace PcBuilderWebApp
         // Конвертация из БД в объект Component с использованием JOIN
         private Component ConvertToComponent(ComponentDB dbComp)
         {
+            if (dbComp == null || string.IsNullOrWhiteSpace(dbComp.ComponentType))
+            {
+                return null;
+            }
+
             Component component = null;
 
-            switch (dbComp.ComponentType.ToLower())
+            switch (dbComp.ComponentType.ToLowerInvariant())
             {
                 case "cpu":
                     var cpuDb = (from cpu in context.CPUs
@@ -64,6 +69,7 @@ namespace PcBuilderWebApp
                     {
                         component = new CPU
                         {
+                            Id = dbComp.Id,
                             Name = dbComp.Name,
                             Manufacturer = dbComp.Manufacturer,
                             Price = dbComp.Price,
@@ -84,6 +90,7 @@ namespace PcBuilderWebApp
                     {
                         component = new GPU
                         {
+                            Id = dbComp.Id,
                             Name = dbComp.Name,
                             Manufacturer = dbComp.Manufacturer,
                             Price = dbComp.Price,
@@ -105,6 +112,7 @@ namespace PcBuilderWebApp
                     {
                         component = new Motherboard
                         {
+                            Id = dbComp.Id,
                             Name = dbComp.Name,
                             Manufacturer = dbComp.Manufacturer,
                             Price = dbComp.Price,
@@ -129,6 +137,7 @@ namespace PcBuilderWebApp
                     {
                         component = new RAM
                         {
+                            Id = dbComp.Id,
                             Name = dbComp.Name,
                             Manufacturer = dbComp.Manufacturer,
                             Price = dbComp.Price,
@@ -149,6 +158,7 @@ namespace PcBuilderWebApp
                     {
                         component = new PSU
                         {
+                            Id = dbComp.Id,
                             Name = dbComp.Name,
                             Manufacturer = dbComp.Manufacturer,
                             Price = dbComp.Price,
@@ -168,6 +178,7 @@ namespace PcBuilderWebApp
                     {
                         component = new Storage
                         {
+                            Id = dbComp.Id,
                             Name = dbComp.Name,
                             Manufacturer = dbComp.Manufacturer,
                             Price = dbComp.Price,
@@ -188,6 +199,7 @@ namespace PcBuilderWebApp
                     {
                         component = new Cooler
                         {
+                            Id = dbComp.Id,
                             Name = dbComp.Name,
                             Manufacturer = dbComp.Manufacturer,
                             Price = dbComp.Price,
@@ -209,6 +221,7 @@ namespace PcBuilderWebApp
                     {
                         component = new Case
                         {
+                            Id = dbComp.Id,
                             Name = dbComp.Name,
                             Manufacturer = dbComp.Manufacturer,
                             Price = dbComp.Price,

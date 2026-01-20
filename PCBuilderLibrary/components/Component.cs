@@ -9,6 +9,7 @@ namespace PCBuilderLibrary.Components
     //Определяем общие свойства, которые будут у каждого компонента
     public abstract class Component
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public string Manufacturer { get; set; }
         public int Price { get; set; }

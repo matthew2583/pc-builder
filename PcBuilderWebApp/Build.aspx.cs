@@ -125,8 +125,10 @@ namespace PcBuilderWebApp
                 if (config != null)
                 {
                     config.BuildName = txtConfigName.Text;
-                    var dbHelper = new DatabaseHelper();
-                    dbHelper.SaveConfiguration(config, txtConfigName.Text);
+                    using (var dbHelper = new DatabaseHelper())
+                    {
+                        dbHelper.SaveConfiguration(config, txtConfigName.Text);
+                    }
                     
                     Response.Write("<script>alert('Сборка сохранена успешно!');</script>");
                     Response.Redirect("Configurations.aspx");

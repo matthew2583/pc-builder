@@ -14,23 +14,29 @@ namespace PcBuilderWebApp.Services
         // Возвращает список компонентов по типу, используя DatabaseHelper
         public List<Component> GetComponentsByType(string componentType)
         {
-            var dbHelper = new DatabaseHelper();
-            return dbHelper.GetComponentsByType(componentType);
+            using (var dbHelper = new DatabaseHelper())
+            {
+                return dbHelper.GetComponentsByType(componentType);
+            }
         }
 
         // Возвращает все компоненты
         public List<Component> GetAllComponents()
         {
-            var dbHelper = new DatabaseHelper();
-            return dbHelper.GetAllComponents();
+            using (var dbHelper = new DatabaseHelper())
+            {
+                return dbHelper.GetAllComponents();
+            }
         }
 
         // Возвращает компонент по ID и типу 
         public Component GetComponentById(int id, string componentType)
         {
-            var dbHelper = new DatabaseHelper();
-            var components = dbHelper.GetComponentsByType(componentType);
-            return components.FirstOrDefault();
+            using (var dbHelper = new DatabaseHelper())
+            {
+                var components = dbHelper.GetComponentsByType(componentType);
+                return components.FirstOrDefault(c => c != null && c.Id == id);
+            }
         }
     }
 }

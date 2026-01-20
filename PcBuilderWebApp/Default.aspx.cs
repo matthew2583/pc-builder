@@ -11,13 +11,9 @@ namespace PcBuilderWebApp
     // Главная страница приложения: список компонентов и быстрый доступ к текущей сборке
     public partial class Default : System.Web.UI.Page
     {
-        private DatabaseHelper dbHelper;
-
         // Инициализация страницы: загружаем данные и настраиваем панели 
         protected void Page_Load(object sender, EventArgs e)
         {
-            dbHelper = new DatabaseHelper();
-
             if (!IsPostBack)
             {
                 LoadAllComponents();
@@ -30,17 +26,33 @@ namespace PcBuilderWebApp
         // Загружает все компоненты из БД один раз и сохраняет в Application для повторного использования
         private void LoadAllComponents()
         {
-            if (Application["AllComponents"] == null)
+            if (Application["AllComponents"] != null)
             {
-                var allComponents = dbHelper.GetAllComponents();
+                return;
+            }
+
+            using (var helper = new DatabaseHelper())
+            {
+                var allComponents = helper.GetAllComponents();
                 Application["AllComponents"] = allComponents;
             }
+        }
+
+        private List<Component> GetCachedComponents()
+        {
+            var cached = Application["AllComponents"] as List<Component>;
+            if (cached == null)
+            {
+                LoadAllComponents();
+                cached = Application["AllComponents"] as List<Component> ?? new List<Component>();
+            }
+            return cached;
         }
 
         // Формирует списки производителей для каждой категории компонентов 
         private void LoadManufacturersForCategories()
         {
-            var allComponents = (List<Component>)Application["AllComponents"];
+            var allComponents = GetCachedComponents();
 
             LoadManufacturersForType(allComponents.OfType<CPU>().ToList(), ddlCPUManufacturer);
             LoadManufacturersForType(allComponents.OfType<GPU>().ToList(), ddlGPUManufacturer);
@@ -72,7 +84,7 @@ namespace PcBuilderWebApp
         // Загружает и привязывает отфильтрованные списки компонентов к Repeater-ам
         private void LoadComponents()
         {
-            var allComponents = (List<Component>)Application["AllComponents"];
+            var allComponents = GetCachedComponents();
 
             rptCPU.DataSource = FilterComponents(allComponents.OfType<CPU>().ToList(), ddlCPUManufacturer.SelectedValue, txtCPUPrice.Text);
             rptCPU.DataBind();
@@ -117,164 +129,150 @@ namespace PcBuilderWebApp
             return filtered.ToList();
         }
 
+        private void ReloadComponents(bool requireValidation = false)
+        {
+            if (requireValidation && !Page.IsValid)
+            {
+                return;
+            }
+
+            LoadComponents();
+        }
+
         protected void ddlCPUManufacturer_SelectedIndexChanged(object sender, EventArgs e)
         {
-            LoadComponents();
+            ReloadComponents();
         }
 
         protected void btnCPUFilter_Click(object sender, EventArgs e)
         {
-            if (Page.IsValid)
-            {
-                LoadComponents();
-            }
+            ReloadComponents(true);
         }
 
         protected void ddlGPUManufacturer_SelectedIndexChanged(object sender, EventArgs e)
         {
-            LoadComponents();
+            ReloadComponents();
         }
 
         protected void btnGPUFilter_Click(object sender, EventArgs e)
         {
-            if (Page.IsValid)
-            {
-                LoadComponents();
-            }
+            ReloadComponents(true);
         }
 
         protected void ddlMBManufacturer_SelectedIndexChanged(object sender, EventArgs e)
         {
-            LoadComponents();
+            ReloadComponents();
         }
 
         protected void btnMBFilter_Click(object sender, EventArgs e)
         {
-            if (Page.IsValid)
-            {
-                LoadComponents();
-            }
+            ReloadComponents(true);
         }
 
         protected void ddlRAMManufacturer_SelectedIndexChanged(object sender, EventArgs e)
         {
-            LoadComponents();
+            ReloadComponents();
         }
 
         protected void btnRAMFilter_Click(object sender, EventArgs e)
         {
-            if (Page.IsValid)
-            {
-                LoadComponents();
-            }
+            ReloadComponents(true);
         }
 
         protected void ddlPSUManufacturer_SelectedIndexChanged(object sender, EventArgs e)
         {
-            LoadComponents();
+            ReloadComponents();
         }
 
         protected void btnPSUFilter_Click(object sender, EventArgs e)
         {
-            if (Page.IsValid)
-            {
-                LoadComponents();
-            }
+            ReloadComponents(true);
         }
 
         protected void ddlStorageManufacturer_SelectedIndexChanged(object sender, EventArgs e)
         {
-            LoadComponents();
+            ReloadComponents();
         }
 
         protected void btnStorageFilter_Click(object sender, EventArgs e)
         {
-            if (Page.IsValid)
-            {
-                LoadComponents();
-            }
+            ReloadComponents(true);
         }
 
         protected void ddlCoolerManufacturer_SelectedIndexChanged(object sender, EventArgs e)
         {
-            LoadComponents();
+            ReloadComponents();
         }
 
         protected void btnCoolerFilter_Click(object sender, EventArgs e)
         {
-            if (Page.IsValid)
-            {
-                LoadComponents();
-            }
+            ReloadComponents(true);
         }
 
         protected void ddlCaseManufacturer_SelectedIndexChanged(object sender, EventArgs e)
         {
-            LoadComponents();
+            ReloadComponents();
         }
 
         protected void btnCaseFilter_Click(object sender, EventArgs e)
         {
-            if (Page.IsValid)
-            {
-                LoadComponents();
-            }
+            ReloadComponents(true);
         }
 
         protected void btnCPUReset_Click(object sender, EventArgs e)
         {
             ddlCPUManufacturer.SelectedValue = "";
             txtCPUPrice.Text = "";
-            LoadComponents();
+            ReloadComponents();
         }
 
         protected void btnGPUReset_Click(object sender, EventArgs e)
         {
             ddlGPUManufacturer.SelectedValue = "";
             txtGPUPrice.Text = "";
-            LoadComponents();
+            ReloadComponents();
         }
 
         protected void btnMBReset_Click(object sender, EventArgs e)
         {
             ddlMBManufacturer.SelectedValue = "";
             txtMBPrice.Text = "";
-            LoadComponents();
+            ReloadComponents();
         }
 
         protected void btnRAMReset_Click(object sender, EventArgs e)
         {
             ddlRAMManufacturer.SelectedValue = "";
             txtRAMPrice.Text = "";
-            LoadComponents();
+            ReloadComponents();
         }
 
         protected void btnPSUReset_Click(object sender, EventArgs e)
         {
             ddlPSUManufacturer.SelectedValue = "";
             txtPSUPrice.Text = "";
-            LoadComponents();
+            ReloadComponents();
         }
 
         protected void btnStorageReset_Click(object sender, EventArgs e)
         {
             ddlStorageManufacturer.SelectedValue = "";
             txtStoragePrice.Text = "";
-            LoadComponents();
+            ReloadComponents();
         }
 
         protected void btnCoolerReset_Click(object sender, EventArgs e)
         {
             ddlCoolerManufacturer.SelectedValue = "";
             txtCoolerPrice.Text = "";
-            LoadComponents();
+            ReloadComponents();
         }
 
         protected void btnCaseReset_Click(object sender, EventArgs e)
         {
             ddlCaseManufacturer.SelectedValue = "";
             txtCasePrice.Text = "";
-            LoadComponents();
+            ReloadComponents();
         }
 
         // Добавляет выбранный компонент в сессионную конфигурацию по типу
@@ -367,7 +365,7 @@ namespace PcBuilderWebApp
             if (e.CommandName == "Select")
             {
                 var componentName = e.CommandArgument.ToString();
-                var allComponents = (List<Component>)Application["AllComponents"];
+                var allComponents = GetCachedComponents();
                 var component = allComponents.OfType<CPU>()
                     .FirstOrDefault(c => c.Name == componentName);
                 if (component != null)
@@ -382,7 +380,7 @@ namespace PcBuilderWebApp
             if (e.CommandName == "Select")
             {
                 var componentName = e.CommandArgument.ToString();
-                var allComponents = (List<Component>)Application["AllComponents"];
+                var allComponents = GetCachedComponents();
                 var component = allComponents.OfType<GPU>()
                     .FirstOrDefault(c => c.Name == componentName);
                 if (component != null)
@@ -397,7 +395,7 @@ namespace PcBuilderWebApp
             if (e.CommandName == "Select")
             {
                 var componentName = e.CommandArgument.ToString();
-                var allComponents = (List<Component>)Application["AllComponents"];
+                var allComponents = GetCachedComponents();
                 var component = allComponents.OfType<Motherboard>()
                     .FirstOrDefault(c => c.Name == componentName);
                 if (component != null)
@@ -412,7 +410,7 @@ namespace PcBuilderWebApp
             if (e.CommandName == "Select")
             {
                 var componentName = e.CommandArgument.ToString();
-                var allComponents = (List<Component>)Application["AllComponents"];
+                var allComponents = GetCachedComponents();
                 var component = allComponents.OfType<RAM>()
                     .FirstOrDefault(c => c.Name == componentName);
                 if (component != null)
@@ -427,7 +425,7 @@ namespace PcBuilderWebApp
             if (e.CommandName == "Select")
             {
                 var componentName = e.CommandArgument.ToString();
-                var allComponents = (List<Component>)Application["AllComponents"];
+                var allComponents = GetCachedComponents();
                 var component = allComponents.OfType<PSU>()
                     .FirstOrDefault(c => c.Name == componentName);
                 if (component != null)
@@ -442,7 +440,7 @@ namespace PcBuilderWebApp
             if (e.CommandName == "Select")
             {
                 var componentName = e.CommandArgument.ToString();
-                var allComponents = (List<Component>)Application["AllComponents"];
+                var allComponents = GetCachedComponents();
                 var component = allComponents.OfType<Storage>()
                     .FirstOrDefault(c => c.Name == componentName);
                 if (component != null)
@@ -457,7 +455,7 @@ namespace PcBuilderWebApp
             if (e.CommandName == "Select")
             {
                 var componentName = e.CommandArgument.ToString();
-                var allComponents = (List<Component>)Application["AllComponents"];
+                var allComponents = GetCachedComponents();
                 var component = allComponents.OfType<Cooler>()
                     .FirstOrDefault(c => c.Name == componentName);
                 if (component != null)
@@ -472,7 +470,7 @@ namespace PcBuilderWebApp
             if (e.CommandName == "Select")
             {
                 var componentName = e.CommandArgument.ToString();
-                var allComponents = (List<Component>)Application["AllComponents"];
+                var allComponents = GetCachedComponents();
                 var component = allComponents.OfType<Case>()
                     .FirstOrDefault(c => c.Name == componentName);
                 if (component != null)
